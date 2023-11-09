@@ -1,0 +1,35 @@
+:host {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+#widgets-wrapper{
+  display: grid;
+  grid-row-gap: 20px;
+}
+
+::ng-deep {
+  .content{
+    padding: 10px ;
+  }
+  .widget {
+    max-width: 400px;
+    box-sizing: border-box;
+    display: grid;
+    width: 100%;
+    border: 1px dotted black;
+    border-radius: 5px;
+    header {
+      text-align: center;
+      width: 100%;
+      background: blanchedalmond;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 5px ;
+      box-sizing: border-box;
+      margin-bottom: 2px;
+    }
+  }
+}
