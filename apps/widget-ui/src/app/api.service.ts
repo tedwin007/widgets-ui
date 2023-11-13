@@ -6,7 +6,7 @@ import {ExistingWidgetMock} from "./app.config";
 @Injectable({
   providedIn: 'root'
 })
-export class WidgetsApiService {
+export class ApiService {
   widgets$ = new BehaviorSubject<BaseWidget>(this.getNewWidgetTemplate())
   mockWidget: BaseWidget = ExistingWidgetMock
 

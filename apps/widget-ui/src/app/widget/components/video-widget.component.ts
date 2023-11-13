@@ -1,4 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
+import {BaseWidget} from "@tedwin007/widgets";
+import {WithTextContent} from "../models/interfaces";
+import {ApiService} from "../../api.service";
 
 @Component({
   selector: 'widget-ui-video-widget',
@@ -15,4 +18,6 @@ import {Component, Input} from '@angular/core';
 })
 export class VideoWidgetComponent {
   @Input() src = 'https://www.w3schools.com/html/mov_bbb.mp4'
+  rawWidget: BaseWidget<WithTextContent> = inject(ApiService).getValue()
+  component = VideoWidgetComponent;
 }

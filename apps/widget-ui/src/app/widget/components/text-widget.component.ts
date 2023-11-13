@@ -12,4 +12,5 @@ import {Component, Input} from '@angular/core';
 })
 export class TextWidgetComponent {
   @Input() text = '%placeholder%'
+
 }
