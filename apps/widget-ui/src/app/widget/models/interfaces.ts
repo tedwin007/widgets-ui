@@ -21,3 +21,4 @@ export interface RenderParams<T = any> {
   widget: UIWidget,
   transform?: <T>(widget: BaseWidget<T>) => WidgetTransform<T>
 }
+export type WidgetProps = BaseWidget['widgetProps'];

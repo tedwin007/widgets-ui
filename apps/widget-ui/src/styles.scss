@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+input, button {
+  width: 100%;
+  padding: 10px;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  border-radius: 5px;
+  outline: none;
+  border: 1px dotted;
+}
+form {
+  display: grid;
+  grid-row-gap: 20px;
+  width: 100%;
+}

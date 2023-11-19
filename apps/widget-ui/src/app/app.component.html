@@ -1,11 +1,24 @@
-<ng-container [widgetUi]="rawWidget"
-              [transform]="transformer"
-              [type]="TextWidgetComponent">
-</ng-container>
+<div id="widgets-wrapper">
+    <ng-container [widgetUi]="rawWidget"
+                  [transform]="transformer"
+                  [type]="TextWidgetComponent">
+    </ng-container>
 
-<ng-container [widgetUi]="rawWidget"
-              [type]="VideoWidgetComponent">
-</ng-container>
+    <ng-container [widgetUi]="rawWidget"
+                  [type]="VideoWidgetComponent">
+    </ng-container>
+</div>
 
-<div id="widgets-wrapper"></div>
+<div id="form-wrapper">
+    <widget-ui-widget-form [title]="'New Widget'"
+                           [description]="newWidgetFormDescription">
+    </widget-ui-widget-form>
+    <widget-ui-widget-form *ngIf="rawWidget"
+                           [description]="existingWidgetFormDescription"
+                           [title]="'Existing Widget'"
+                           [rawWidget]="rawWidget">
+    </widget-ui-widget-form>
+</div>
+
+
 

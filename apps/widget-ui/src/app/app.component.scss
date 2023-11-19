@@ -1,26 +1,39 @@
 :host {
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  justify-items: center;
 }
-#widgets-wrapper{
+
+#widgets-wrapper, #form-wrapper {
+  align-self: start;
+  max-width: 400px;
   display: grid;
   grid-row-gap: 20px;
+  padding: 20px;
+  position: relative;
 }
 
 ::ng-deep {
+  widget-ui-widget-form {
+    padding-bottom: 50px;
+    max-width: 400px;
+  }
+
   .content{
     padding: 10px ;
   }
+
   .widget {
-    max-width: 400px;
     box-sizing: border-box;
     display: grid;
     width: 100%;
     border: 1px dotted black;
     border-radius: 5px;
+    
     header {
       text-align: center;
       width: 100%;

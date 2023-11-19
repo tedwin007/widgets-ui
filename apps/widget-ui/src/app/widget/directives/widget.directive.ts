@@ -29,7 +29,6 @@ export class WidgetDirective<T> {
     console.log('fromJson', this.fromJson )
     this.widgetUI = this.fromJson.getInstance();
     console.log('getInstance', this.fromJson.getInstance() )
-
   }
 
   @Input() set type(component: Type<any>) {

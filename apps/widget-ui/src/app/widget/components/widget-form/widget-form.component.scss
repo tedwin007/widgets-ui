@@ -1,0 +1,15 @@
+:host {
+  width: 100%;
+  display: grid;
+  align-self: start;
+
+  button {
+    justify-self: right;
+  }
+
+  .input-container {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+}

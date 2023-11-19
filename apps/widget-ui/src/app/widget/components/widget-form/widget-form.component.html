@@ -1,0 +1,26 @@
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <h2 *ngIf="title">{{title}}</h2>
+  <p *ngIf="description" [innerHTML]="description"></p>
+
+  <widget-ui-hidden-form *ngIf="hiddenPropsForm" [form]="hiddenPropsForm">
+  </widget-ui-hidden-form>
+
+  <div *ngFor="let item of formData | keyvalue " class="input-container">
+    <label for="{{item.key}}">"{{item.key | uppercase}}"</label>
+    <input [formControlName]="item.key || ''"
+           [placeholder]="item.key | uppercase"
+           [type]="getTypeOf(item.value)"
+           [id]="item.key">
+  </div>
+
+  <widget-ui-props-builder-form (addProp)="addProp($event)"
+                                [requiredFormError]="requiredFormError">
+  </widget-ui-props-builder-form>
+
+  <button type="submit">Submit</button>
+
+  <widget-ui-save-result *ngIf="saveResult" [rawWidget]="saveResult"></widget-ui-save-result>
+</form>
+
+

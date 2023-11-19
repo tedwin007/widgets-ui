@@ -1,0 +1,11 @@
+<form class="add-row" (ngSubmit)="addProp.emit($event)">
+    <input type="text" placeholder="Key" name="key" required>
+    <select name="value" required>
+        <option value="text">Text</option>
+        <option value="object">Object</option>
+        <option value="boolean">Boolean</option>
+        <option value="number">Number</option>
+    </select>
+    <button type="submit">Add</button>
+</form>
+<div class="error" *ngIf="requiredFormError">Key input is required</div>

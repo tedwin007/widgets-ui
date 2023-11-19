@@ -1,7 +1,7 @@
 import {Component, inject, Input} from '@angular/core';
 import {BaseWidget} from "@tedwin007/widgets";
 import {WithTextContent} from "../models/interfaces";
-import {ApiService} from "../../api.service";
+import {WidgetService} from "../widget.service";
 
 @Component({
   selector: 'widget-ui-video-widget',
@@ -13,11 +13,10 @@ import {ApiService} from "../../api.service";
               Your browser does not support HTML video.
           </video>
       </div>
-  `,
-  styles: [``],
+  `
 })
 export class VideoWidgetComponent {
   @Input() src = 'https://www.w3schools.com/html/mov_bbb.mp4'
-  rawWidget: BaseWidget<WithTextContent> = inject(ApiService).getValue()
+  rawWidget: BaseWidget<WithTextContent> = inject(WidgetService).getValue()
   component = VideoWidgetComponent;
 }

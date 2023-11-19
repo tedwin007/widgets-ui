@@ -89,6 +89,33 @@ export const renderByComponent = function () {
  */
 export function textWidgetTransformer(widget: BaseWidget<WithTextContent>): WidgetTransform<TextWidgetComponent> {
   return {
-    text: () => `${widget?.data?.text} ${widget.data?.sections}`
+    text: () => `${widget?.data?.text} ${widget.data?.sections.join("<br>")}`
+  }
+}
+
+export function getNewWidgetTemplate(): BaseWidget {
+  return {
+    widgetProps: {},
+    config: {}
+  }
+}
+
+
+export function getTypeOf(value: string):string {
+  switch (value) {
+    case "bigint":
+    case "number":
+      return 'number'
+    case "boolean":
+      return 'boolean'
+    case "function":
+    case "object":
+    case "undefined":
+      return 'object'
+    case "string":
+    case "symbol":
+      return 'text'
+    default:
+      return 'text'
   }
 }
