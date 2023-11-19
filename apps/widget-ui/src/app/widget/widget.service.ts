@@ -71,9 +71,20 @@ export class WidgetService {
       const value = {type: getTypeOf(props[current])};
       return {
         ...prev,
-        [current]: value.type === 'text' ? 'string' : value
+        [current]: this.getSchemaByType(value)
       }
     }, {});
+  }
+
+  private getSchemaByType(value: { type: string }) {
+    const type = value.type === 'text' ? 'string' : value.type;
+    const isObjectType = type === 'object';
+    return {
+      type,
+      ...(isObjectType ? {additionalProperties: isObjectType} : {}),
+      // TBD - nested props
+      ...(isObjectType ? {properties: {}} : {}),
+    }
   }
 
   private toWidgetProps(widgetProps: any): WidgetProps {

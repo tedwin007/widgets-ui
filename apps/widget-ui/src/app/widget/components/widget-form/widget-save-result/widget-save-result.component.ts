@@ -94,7 +94,7 @@ import {WidgetService} from "../../../widget.service";
       </div>
       <hr>
       <div>
-          <h2>Raw Wisget</h2>
+          <h2>Raw Widget</h2>
           <div class="property">
               {{rawWidget | json }}
           </div>
