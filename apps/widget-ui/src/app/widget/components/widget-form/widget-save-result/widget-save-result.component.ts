@@ -1,4 +1,4 @@
-import {Component, inject, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BaseWidget} from "@tedwin007/widgets";
@@ -7,30 +7,31 @@ import {WidgetService} from "../../../widget.service";
 @Component({
   selector: 'widget-ui-save-result',
   standalone: true,
+  changeDetection:ChangeDetectionStrategy.OnPush,
   styles:[`
-    .schema {
-      margin: 20px;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-    }
+      .schema {
+          margin: 20px;
+          padding: 20px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          background-color: #f9f9f9;
+      }
 
-    .property {
-      margin-bottom: 20px;
-    }
+      .property {
+          margin-bottom: 20px;
+      }
 
-    .sub-property {
-      margin-left: 20px;
-      border-left: 2px solid #eee;
-      padding-left: 10px;
-    }
+      .sub-property {
+          margin-left: 20px;
+          border-left: 2px solid #eee;
+          padding-left: 10px;
+      }
 
-    .property h3, .property h4, .property h5 {
-      margin: 10px 0;
-      display: inline-block;
-    }
-`],
+      .property h3, .property h4, .property h5 {
+          margin: 10px 0;
+          display: inline-block;
+      }
+  `],
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
       <div>
@@ -109,9 +110,8 @@ export class WidgetSaveResultComponent {
   }
 
   @Input() set rawWidget(value: BaseWidget) {
-    console.log(value)
     this.schema = this.widgetService.buildCustomSchema(value.widgetProps, !!value.id)
-    console.log("this.schema",this.schema)
+    console.log("Schema: ", this.schema)
     this._rawWidget = value;
   }
 

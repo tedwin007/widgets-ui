@@ -8,6 +8,8 @@ import {CreateWidgetSchema, EditWidgetSchema} from "@tedwin007/widgets/src/lib/s
 import {WidgetProps} from "./models/interfaces";
 
 
+type HiddenProps = Pick<BaseWidget, 'id' | 'version'>;
+
 @Injectable({providedIn: 'root'})
 export class WidgetService {
   static readonly WIDGETS_CONTAINER_SELECTOR: string = '#widgets-wrapper'
@@ -38,10 +40,7 @@ export class WidgetService {
    * @param config
    * @param hiddenProps
    */
-  saveWidget({widgetProps, config}: BaseWidget<any, any>, hiddenProps?: {
-    id: string,
-    version: string
-  }): Observable<ToJsonResult | undefined> {
+  saveWidget({widgetProps, config}: BaseWidget, hiddenProps?: HiddenProps): Observable<ToJsonResult | undefined> {
     const {id, version} = hiddenProps || {};
     const props: WidgetProps = this.toWidgetProps(widgetProps)
     const customSchema = this.buildCustomSchema(props, !id);
@@ -55,19 +54,17 @@ export class WidgetService {
 
   buildCustomSchema(props: BaseWidget["widgetProps"], isNewWidget: boolean) {
     const schema = isNewWidget ? CreateWidgetSchema : EditWidgetSchema
-    const result = {
+    return {
       ...schema,
       properties: {
         ...schema.properties,
         widgetProps: {...this.toPropsSchema(props)}
       }
-    };
-    console.log("** Generated Schema: ** ", result)
-    return result
+    }
   }
 
   private toPropsSchema(props: WidgetProps): WidgetProps {
-    return Object.keys(props).reduce((prev, current) => {
+    return Object.keys(props).reduce((prev, current: string) => {
       const value = {type: getTypeOf(props[current])};
       return {
         ...prev,
@@ -89,7 +86,6 @@ export class WidgetService {
 
   private toWidgetProps(widgetProps: any): WidgetProps {
     return Object.keys(widgetProps || {}).reduce((previousValue, currentValue: string): WidgetProps => {
-      console.log(widgetProps[currentValue])
       return {...previousValue, [currentValue]: widgetProps[currentValue] === 'text' ? 'string' : widgetProps[currentValue]}
     }, {});
   }
