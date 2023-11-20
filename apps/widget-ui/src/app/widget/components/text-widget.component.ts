@@ -13,7 +13,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
-      <header>Text Widget</header>
+    <header>{{title}}</header>
       <div class="content">
           <p [innerHTML]="text"></p>
       </div>
@@ -21,6 +21,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
   styles: [``],
 })
 export class TextWidgetComponent {
-  @Input() text = '% placeholder %'
-
+  @Input() text = '% Place Holder %';
+  @Input() title = "Text Widget";
 }

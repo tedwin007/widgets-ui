@@ -1,6 +1,24 @@
 <div id="widgets-wrapper">
+  <h2>Capabilities:</h2>
+
+  <div class="capabilities">
+    <div class="flex">
+      <label for="canEdit"><b>CanEdit</b></label>
+      <input id="canEdit" type="checkbox" [checked]="rawWidget.config['canEdit']" (click)="toggleCanEdit()">
+    </div>
+    <br>
+    <div>
+      When the 'canEdit' capability is enabled, you have the ability to alter the text content. This illustrates the
+      nature of capabilities and their relationship to the widget's configuration, as defined by its 'config' property.
+    </div>
+  </div>
+
+  <hr>
+  <h2>Widgets UI:</h2>
+
     <ng-container [widgetUi]="rawWidget"
                   [transform]="transformer"
+                  [capabilities]="capabilities"
                   [type]="TextWidgetComponent">
     </ng-container>
 
@@ -9,16 +27,14 @@
     </ng-container>
 </div>
 
-<div id="form-wrapper">
-    <widget-ui-widget-form [title]="'New Widget'"
-                           [description]="newWidgetFormDescription">
-    </widget-ui-widget-form>
-    <widget-ui-widget-form *ngIf="rawWidget"
-                           [description]="existingWidgetFormDescription"
-                           [title]="'Existing Widget'"
-                           [rawWidget]="rawWidget">
-    </widget-ui-widget-form>
-</div>
+<widget-ui-widget-form *ngIf="rawWidget"
+                       [description]="existingWidgetFormDescription"
+                       [title]="'Existing Widget:'"
+                       [rawWidget]="rawWidget">
+</widget-ui-widget-form>
 
+<widget-ui-widget-form [title]="'New Widget:'"
+                           [description]="newWidgetFormDescription">
+</widget-ui-widget-form>
 
 

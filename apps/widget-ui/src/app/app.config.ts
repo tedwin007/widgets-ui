@@ -13,7 +13,9 @@ export const appConfig: ApplicationConfig = {
 export const ExistingWidgetMock: BaseWidget<WithTextContent> = {
   "id": "1699525098626_1",
   "version": "1699525098626_1_v1",
-  "config": {},
+  "config": {
+    canEdit: true,
+  },
   "widgetProps": {
     text: ""
   },

@@ -1,14 +1,17 @@
 import {inject, Injectable} from '@angular/core';
-import {BaseWidget, FromJsonResponse, WidgetManager, WidgetSchema} from "@tedwin007/widgets";
+import {BaseWidget, FromJsonResponse, ToJsonResult, WidgetManager, WidgetSchema} from "@tedwin007/widgets";
 import {ApiService} from "../api.service";
 import {BehaviorSubject, Observable, of, take, tap} from "rxjs";
-import {getNewWidgetTemplate, getTypeOf} from "./utils";
-import {ToJsonResult} from "@tedwin007/widgets/src/lib/widget/interfaces/widget.interface";
+import {toContentEditable, getNewWidgetTemplate, getTypeOf, disableContentEditable} from "./utils";
 import {CreateWidgetSchema, EditWidgetSchema} from "@tedwin007/widgets/src/lib/schema/constants/schemas-def.const";
 import {WidgetProps} from "./models/interfaces";
 
 
 type HiddenProps = Pick<BaseWidget, 'id' | 'version'>;
+
+export interface Capabilities {
+  canEdit: (widget: BaseWidget) => void
+}
 
 @Injectable({providedIn: 'root'})
 export class WidgetService {
@@ -26,6 +29,11 @@ export class WidgetService {
 
   getValue(): BaseWidget<any, any> {
     return this.widgets$.getValue();
+  }
+
+
+  setValue(widget: BaseWidget<any, any>): void {
+    return this.widgets$.next(widget)
   }
 
   instantiate(rawWidget: BaseWidget): FromJsonResponse | void {
@@ -86,7 +94,20 @@ export class WidgetService {
 
   private toWidgetProps(widgetProps: any): WidgetProps {
     return Object.keys(widgetProps || {}).reduce((previousValue, currentValue: string): WidgetProps => {
-      return {...previousValue, [currentValue]: widgetProps[currentValue] === 'text' ? 'string' : widgetProps[currentValue]}
+      return {
+        ...previousValue,
+        [currentValue]: widgetProps[currentValue] === 'text' ? 'string' : widgetProps[currentValue]
+      }
     }, {});
   }
+
+  get widgetCapabilities(): Capabilities {
+    return {
+      canEdit: (widget: BaseWidget) => {
+        if (widget.config['canEdit']) toContentEditable()
+        else disableContentEditable()
+      }
+    }
+  }
+
 }

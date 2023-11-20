@@ -4,6 +4,7 @@ import {WidgetService} from "../widget.service";
 import {renderByComponent} from "../utils";
 import {WidgetTransformDirective} from "./widget-transform.directive";
 import {RenderParams} from "../models/interfaces";
+import {CapabilityDirective} from "./capability.directive";
 
 @Directive({
   selector: '[widgetUi]',
@@ -11,6 +12,9 @@ import {RenderParams} from "../models/interfaces";
   hostDirectives: [{
     directive: WidgetTransformDirective,
     inputs: ['transform:transform', 'widgetUi:widgetUi']
+  }, {
+    directive: CapabilityDirective,
+    inputs: ['capabilities:capabilities', 'widgetUi:widgetUi']
   }]
 
 })
@@ -24,15 +28,15 @@ export class WidgetDirective<T> {
 
   @Input('widgetUi') set rawWidget(value: BaseWidget) {
     this._rawWidget = value;
-    console.log('_rawWidget', value)
+    console.log('Raw Widget', value)
     this.fromJson = this.widgetService.instantiate(this._rawWidget)!
-    console.log('fromJson', this.fromJson )
+    console.log('FromJson:', this.fromJson)
     this.widgetUI = this.fromJson.getInstance();
-    console.log('getInstance', this.fromJson.getInstance() )
+    console.log('Instantiated Widget:', this.fromJson.getInstance())
   }
 
   @Input() set type(component: Type<any>) {
-    setTimeout(() => this.renderWidgets(component))
+    this.renderWidgets(component)
   }
 
   private getAttachRenderParams(component: Type<any>): RenderParams | null {

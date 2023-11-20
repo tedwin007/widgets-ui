@@ -109,8 +109,8 @@ export function getTypeOf(value: string):string {
     case "boolean":
       return 'boolean'
     case "function":
-    case "object":
     case "undefined":
+    case "object":
       return 'object'
     case "string":
     case "symbol":
@@ -118,4 +118,27 @@ export function getTypeOf(value: string):string {
     default:
       return 'text'
   }
+}
+
+export function toContentEditable(walker = document.querySelector('.widget')!.childNodes) {
+  walker.forEach((node) => {
+    if(node.childNodes.length){
+      toContentEditable(node.childNodes)
+    }
+    if (node.nodeType === 3) {
+      const editableDiv = document.createElement('span'); // or 'div'
+      editableDiv.contentEditable = 'true';
+      editableDiv.textContent = node.nodeValue;
+      node.parentNode?.replaceChild(editableDiv, node);
+    }
+  });
+
+}
+
+export function disableContentEditable() {
+  const editableElements = document.querySelectorAll('[contenteditable="true"]');
+  console.log('editableElements')
+  editableElements.forEach(function(element:any) {
+    element.contentEditable = 'false';
+  });
 }

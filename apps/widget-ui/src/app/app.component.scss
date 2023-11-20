@@ -1,13 +1,19 @@
 :host {
   width: 100%;
-  display: flex;
+  display: grid;
   justify-content: space-around;
   align-items: center;
+  grid-column-gap: 40px;
+
   height: 100vh;
   justify-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-#widgets-wrapper, #form-wrapper {
+.flex {
+  display: flex;
+}
+#widgets-wrapper {
   align-self: start;
   justify-content: center;
   display: grid;
@@ -16,10 +22,18 @@
   position: relative;
 }
 
+.capabilities {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: start;
+  #canEdit{
+    justify-self: start;
+  }
+}
+
 ::ng-deep {
   widget-ui-widget-form {
     padding-bottom: 50px;
-    max-width: 400px;
   }
 
   .content{
