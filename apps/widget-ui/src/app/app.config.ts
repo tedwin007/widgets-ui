@@ -30,3 +30,7 @@ export const ExistingWidgetMock: BaseWidget<WithTextContent> = {
 }
 
 
+export const ExistingWidgetFormDescription = 'This document outlines the procedure for modifying existing widgets. Initially, each widget is characterized by an `id` and a `version`.' +
+  ' It`s important to note that altering the existing properties of a widget is not permitted, as this may lead to compatibility issues. However, you are free to introduce and modify new properties. It`s crucial to remember that this process only involves defining the anticipated UI properties (widgetProps), and does not extend to altering the data schema.';
+
+export const NewWidgetFormDescription = 'This document outlines the creation process for a new Widget. Initially, this Widget lacks properties such as id, data, and version. To establish its properties, specify each Key (the name of the property) and the corresponding value type, which can be \'text\', \'object\', \'boolean\', or \'number\'.';

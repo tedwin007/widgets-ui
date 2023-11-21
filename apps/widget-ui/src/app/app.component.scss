@@ -10,10 +10,7 @@
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.flex {
-  display: flex;
-}
-#widgets-wrapper {
+#widgets-wrapper, #capabilities-wrapper {
   align-self: start;
   justify-content: center;
   display: grid;
@@ -22,14 +19,6 @@
   position: relative;
 }
 
-.capabilities {
-  display: grid;
-  grid-template-rows: 1fr auto;
-  justify-items: start;
-  #canEdit{
-    justify-self: start;
-  }
-}
 
 ::ng-deep {
   widget-ui-widget-form {
@@ -57,5 +46,27 @@
       box-sizing: border-box;
       margin-bottom: 2px;
     }
+  }
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  :host {
+    grid-template-columns: 1fr; /* Adjust the grid layout for smaller screens */
+  }
+
+  .widget header {
+    font-size: 18px; /* Adjust font size for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    grid-template-columns: 1fr; /* Single column layout for very small screens */
+    grid-row-gap: 20px;
+  }
+
+  .widget {
+    margin-bottom: 10px; /* Space out widgets on smaller screens */
   }
 }

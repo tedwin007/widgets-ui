@@ -11,7 +11,7 @@ type TransformValue<T, k extends keyof BaseWidget<T>['widgetProps']> =
   | BaseWidget<T>['widgetProps'][k];
 
 export type WidgetPropsKeys<T> = keyof BaseWidget<T>['widgetProps'];
-export type WidgetTransform<T> =
+export type WidgetTransform<T = any> =
   Partial<{ [k in WidgetPropsKeys<T>]: TransformValue<T, k> }>
   & Record<string, any>
 
@@ -22,3 +22,7 @@ export interface RenderParams<T = any> {
   transform?: <T>(widget: BaseWidget<T>) => WidgetTransform<T>
 }
 export type WidgetProps = BaseWidget['widgetProps'];
+
+export interface Capabilities {
+  canEdit: (widget: BaseWidget) => void
+}

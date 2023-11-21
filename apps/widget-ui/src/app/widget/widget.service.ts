@@ -2,37 +2,47 @@ import {inject, Injectable} from '@angular/core';
 import {BaseWidget, FromJsonResponse, ToJsonResult, WidgetManager, WidgetSchema} from "@tedwin007/widgets";
 import {ApiService} from "../api.service";
 import {BehaviorSubject, Observable, of, take, tap} from "rxjs";
-import {toContentEditable, getNewWidgetTemplate, getTypeOf, disableContentEditable} from "./utils";
+import {disableContentEditable, getNewWidgetTemplate, getTypeOf, toContentEditable} from "./utils";
 import {CreateWidgetSchema, EditWidgetSchema} from "@tedwin007/widgets/src/lib/schema/constants/schemas-def.const";
-import {WidgetProps} from "./models/interfaces";
+import {Capabilities, WidgetProps} from "./models/interfaces";
 
 
 type HiddenProps = Pick<BaseWidget, 'id' | 'version'>;
 
-export interface Capabilities {
-  canEdit: (widget: BaseWidget) => void
-}
+
 
 @Injectable({providedIn: 'root'})
 export class WidgetService {
   static readonly WIDGETS_CONTAINER_SELECTOR: string = '#widgets-wrapper'
   private widgetManger: WidgetManager = new WidgetManager(console)
   private apiService: ApiService = inject(ApiService);
-  widgets$: BehaviorSubject<BaseWidget> = new BehaviorSubject<BaseWidget>(getNewWidgetTemplate())
+  private widgets$: BehaviorSubject<BaseWidget> = new BehaviorSubject<BaseWidget>(getNewWidgetTemplate())
 
+  get widgetCapabilities(): Capabilities {
+    return {
+      canEdit: (widget: BaseWidget) => {
+        if (widget.config['canEdit']) toContentEditable()
+        else disableContentEditable()
+      }
+    }
+  }
   constructor() {
+    // simulate fetching widget's data from an api
     this.apiService.fetchWidgets().pipe(
         take(1),
         tap((data) => this.widgets$.next(data))
     ).subscribe();
   }
 
-  getValue(): BaseWidget<any, any> {
+  getValue(): BaseWidget {
     return this.widgets$.getValue();
   }
 
+  getWidgets$(): Observable<BaseWidget> {
+    return this.widgets$.asObservable()
+  }
 
-  setValue(widget: BaseWidget<any, any>): void {
+  setValue(widget: BaseWidget): void {
     return this.widgets$.next(widget)
   }
 
@@ -60,6 +70,22 @@ export class WidgetService {
     return rawWidget ? this.apiService.saveWidget(rawWidget) : of(undefined)
   }
 
+  /**
+   * ## Constructing Custom Schemas
+   * @description When creating a new widget, defining a precise data structure is crucial.
+   * This includes specifying mandatory properties, their types, and the widget's capabilities (config).
+   * Consistency is essential throughout the widget's lifecycle.
+   * For instance, we aim to avoid changes that could lead to breaking changes.
+   * In such cases, creating a new widget version is preferable.
+   * This flexibility is enabled by the "widgets" library's support for custom schemas (WidgetSchema.custom).
+   * Usage scenarios:
+   * - To create an entirely new widget, use WidgetSchema.New
+   * - To modify an existing widget, use WidgetSchema.Existing
+   * - To validate a particular widget, use WidgetSchema.custom
+   *
+   * @param props
+   * @param isNewWidget
+   */
   buildCustomSchema(props: BaseWidget["widgetProps"], isNewWidget: boolean) {
     const schema = isNewWidget ? CreateWidgetSchema : EditWidgetSchema
     return {
@@ -99,15 +125,6 @@ export class WidgetService {
         [currentValue]: widgetProps[currentValue] === 'text' ? 'string' : widgetProps[currentValue]
       }
     }, {});
-  }
-
-  get widgetCapabilities(): Capabilities {
-    return {
-      canEdit: (widget: BaseWidget) => {
-        if (widget.config['canEdit']) toContentEditable()
-        else disableContentEditable()
-      }
-    }
   }
 
 }

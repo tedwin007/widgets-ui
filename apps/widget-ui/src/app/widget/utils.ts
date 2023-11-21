@@ -1,7 +1,6 @@
 import {ApplicationRef, ComponentRef, createComponent, inject, Renderer2} from "@angular/core";
 import {BaseWidget, UIWidget, WidgetStatus} from "@tedwin007/widgets";
 import {RenderParams, WidgetTransform, WithTextContent} from "./models/interfaces";
-import {TextWidgetComponent} from "./components/text-widget.component";
 
 
 /**
@@ -87,9 +86,9 @@ export const renderByComponent = function () {
  * When passed to {@link WidgetTransformDirective} the result will be assigned the values of the Widget's component (widgetProps).
  * @param widget
  */
-export function textWidgetTransformer(widget: BaseWidget<WithTextContent>): WidgetTransform<TextWidgetComponent> {
+export function textWidgetTransformer(): WidgetTransform {
   return {
-    text: () => `${widget?.data?.text} ${widget.data?.sections.join("<br>")}`
+    text: (widget: BaseWidget<WithTextContent>): string => `${widget?.data?.text} ${widget.data?.sections.join("<br>")}`
   }
 }
 
@@ -121,12 +120,11 @@ export function getTypeOf(value: string):string {
 }
 
 export function toContentEditable(walker = document.querySelector('.widget')!.childNodes) {
-  walker.forEach((node) => {
-    if(node.childNodes.length){
-      toContentEditable(node.childNodes)
-    }
+  walker.forEach((node: ChildNode) => {
+    if (node.childNodes.length) toContentEditable(node.childNodes)
+
     if (node.nodeType === 3) {
-      const editableDiv = document.createElement('span'); // or 'div'
+      const editableDiv = document.createElement('span');
       editableDiv.contentEditable = 'true';
       editableDiv.textContent = node.nodeValue;
       node.parentNode?.replaceChild(editableDiv, node);
@@ -135,10 +133,7 @@ export function toContentEditable(walker = document.querySelector('.widget')!.ch
 
 }
 
-export function disableContentEditable() {
+export function disableContentEditable(): void {
   const editableElements = document.querySelectorAll('[contenteditable="true"]');
-  console.log('editableElements')
-  editableElements.forEach(function(element:any) {
-    element.contentEditable = 'false';
-  });
+  editableElements.forEach((element: any) => element.contentEditable = 'false');
 }

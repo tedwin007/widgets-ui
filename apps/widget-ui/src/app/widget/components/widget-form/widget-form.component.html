@@ -1,26 +1,32 @@
 <form *ngIf="form" [formGroup]="form" (ngSubmit)="submit()">
+  <ng-container *ngIf="!saveResult">
+    <h2 *ngIf="title">{{title}}</h2>
 
-  <h2 *ngIf="title">{{title}}</h2>
-  <p *ngIf="description" [innerHTML]="description"></p>
+    <p *ngIf="description" [innerHTML]="description"></p>
 
-  <widget-ui-hidden-form *ngIf="hiddenPropsForm" [form]="hiddenPropsForm">
-  </widget-ui-hidden-form>
+    <widget-ui-hidden-form *ngIf="hiddenPropsForm"
+                           [form]="hiddenPropsForm">
+    </widget-ui-hidden-form>
 
-  <div *ngFor="let item of formData | keyvalue " class="input-container">
-    <label for="{{item.key}}">"{{item.key | uppercase}}"</label>
-    <input [formControlName]="item.key || ''"
-           [placeholder]="item.key | uppercase"
-           [type]="getTypeOf(item.value)"
-           [id]="item.key">
-  </div>
+    <div *ngFor="let item of formData | keyvalue " class="input-container">
+      <label for="{{item.key}}">"{{item.key | uppercase}}"</label>
+      <input [formControlName]="item.key || ''"
+             [placeholder]="item.key | uppercase"
+             [type]="getTypeOf(item.value)"
+             [id]="item.key">
+    </div>
 
-  <widget-ui-props-builder-form (addProp)="addProp($event)"
-                                [requiredFormError]="requiredFormError">
-  </widget-ui-props-builder-form>
+    <widget-ui-props-builder-form (addProp)="addProp($event)"
+                                  [requiredFormError]="requiredFormError">
+    </widget-ui-props-builder-form>
 
-  <button type="submit">Submit</button>
+    <button type="submit">Submit</button>
+  </ng-container>
 
-  <widget-ui-save-result *ngIf="saveResult" [rawWidget]="saveResult"></widget-ui-save-result>
+  <widget-ui-save-result *ngIf="saveResult"
+                         [rawWidget]="saveResult">
+
+  </widget-ui-save-result>
 </form>
 
 

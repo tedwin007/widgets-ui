@@ -8,8 +8,13 @@ input, button {
   outline: none;
   border: 1px dotted;
 }
+
 form {
   display: grid;
   grid-row-gap: 20px;
   width: 100%;
+}
+
+.flex {
+  display: flex;
 }

@@ -9,14 +9,34 @@ export type WidgetPropKey<T> = Partial<keyof BaseWidget<T>['widgetProps']>
   standalone: true,
 })
 export class WidgetTransformDirective<T = any> {
+  private _widgetUi!: BaseWidget<T>
 
-  @Input() set transform(value: WidgetTransform<T>) {
-    if (this.widgetUi)
-      for (const prop in value) {
-        this.widgetUi.widgetProps[prop as WidgetPropKey<T>] = ((value[prop] && typeof value[prop] === "function") ? value[prop]?.() : value[prop])
-      }
+  get widgetUi(): BaseWidget<T> {
+    return this._widgetUi;
   }
 
-  @Input() widgetUi!: BaseWidget<T>
+  @Input() set widgetUi(value: BaseWidget<T>) {
+    this._widgetUi = value;
+    this.executeTransformers();
+
+  }
+
+  private _transformers?: WidgetTransform<T>;
+
+  @Input() set transform(value: WidgetTransform<T>) {
+    this._transformers = value;
+    this.executeTransformers();
+  }
+
+  private executeTransformers() {
+    if (this._transformers && this._widgetUi) {
+      console.log(this._transformers);
+      for (const prop in this._transformers) {
+        console.log('  1', this._widgetUi.widgetProps[prop as WidgetPropKey<T>])
+        this._widgetUi.widgetProps[prop as WidgetPropKey<T>] = (this._transformers?.[prop] && typeof this._transformers[prop] === "function") ? this._transformers[prop]?.(this.widgetUi) : this.transform[prop]
+      }
+    }
+  }
+
 
 }

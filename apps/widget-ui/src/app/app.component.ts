@@ -1,7 +1,7 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {WidgetDirective} from "./widget/directives/widget.directive";
-import {Capabilities, WidgetService} from "./widget/widget.service";
+import {WidgetService} from "./widget/widget.service";
 import {BaseWidget} from "@tedwin007/widgets";
 import {WidgetComponentsModule} from "./widget/components/widget-components.module";
 import {textWidgetTransformer} from './widget/utils';
@@ -10,46 +10,54 @@ import {CommonModule} from "@angular/common";
 import {WidgetTransformDirective} from "./widget/directives/widget-transform.directive";
 import {TextWidgetComponent} from "./widget/components/text-widget.component";
 import {VideoWidgetComponent} from "./widget/components/video-widget.component";
+import {Observable, Subject} from "rxjs";
+import {ExistingWidgetFormDescription, NewWidgetFormDescription} from "./app.config";
+import {CapabilitiesComponent} from "./components/capabilities.component";
+
 
 @Component({
   standalone: true,
-  imports: [RouterModule, WidgetComponentsModule, WidgetDirective, CommonModule, WidgetTransformDirective],
+  imports: [
+    RouterModule,
+    WidgetComponentsModule,
+    WidgetDirective,
+    CommonModule,
+    WidgetTransformDirective,
+    CapabilitiesComponent
+  ],
   providers: [WidgetService],
   selector: 'widget-ui-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  private widgetService: WidgetService = inject(WidgetService);
+export class AppComponent implements OnDestroy {
+  protected readonly transformer: WidgetTransform<WithTextContent> = textWidgetTransformer()
+  protected readonly WidgetTypes = [TextWidgetComponent, VideoWidgetComponent]
   protected readonly TextWidgetComponent = TextWidgetComponent;
   protected readonly VideoWidgetComponent = VideoWidgetComponent;
-  protected readonly newWidgetFormDescription = 'This document outlines the creation process for a new Widget. Initially, this Widget lacks properties such as id, data, and version. To establish its properties, specify each Key (the name of the property) and the corresponding value type, which can be \'text\', \'object\', \'boolean\', or \'number\'.'
-  protected readonly existingWidgetFormDescription = 'This document outlines the procedure for modifying existing widgets. Initially, each widget is characterized by an `id` and a `version`.' +
-      ' It`s important to note that altering the existing properties of a widget is not permitted, as this may lead to compatibility issues. However, you are free to introduce and modify new properties. It`s crucial to remember that this process only involves defining the anticipated UI properties (widgetProps), and does not extend to altering the data schema.'
-  rawWidget!: BaseWidget;
-  transformer: WidgetTransform<WithTextContent>;
-  capabilities!: (keyof Capabilities)[]
+  protected readonly newWidgetFormDescription = NewWidgetFormDescription
+  protected readonly existingWidgetFormDescription = ExistingWidgetFormDescription
+  protected rawWidget$!: Observable<BaseWidget>;
+  private widgetService: WidgetService = inject(WidgetService);
+  protected capabilities = this.widgetService.widgetCapabilities
+  private ngUnsubscribe = new Subject<null>()
 
   constructor() {
     this.setRawWidget()
-    this.setCapabilities()
-    this.transformer = textWidgetTransformer(this.rawWidget);
   }
 
-  toggleCanEdit(): void {
+  toggleCanEdit($event: boolean): void {
     const widget = this.widgetService.getValue();
-    const canEdit = widget.config["canEdit"];
-    widget.config["canEdit"] = !canEdit
-    this.widgetService.setValue(widget)
-    this.setRawWidget()
-    this.setCapabilities()
-  }
-
-  private setCapabilities(): void {
-    this.capabilities = ['canEdit']
+    widget.config["canEdit"] = !$event
+    this.widgetService.setValue({...widget})
   }
 
   private setRawWidget(): void {
-    this.rawWidget = this.widgetService.getValue()
+    this.rawWidget$ = this.widgetService.getWidgets$()
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next(null);
+    this.ngUnsubscribe.complete();
   }
 }
